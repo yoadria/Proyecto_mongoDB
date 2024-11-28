@@ -4,7 +4,7 @@ import random
 
 # Configurar la conexión a MongoDB
 client = MongoClient("mongodb://localhost:27017/")
-db = client["hospital_db"]  # Nombre de la base de datos
+db = client["ProyectoDB"]  # Nombre de la base de datos
 
 # Inicializar Faker
 fake = Faker()

@@ -7,7 +7,7 @@ def main(page: ft.Page):
 
     pantalla_logeo(page)
     campos_logeo(page)
-    campos_logeo(page)
+
 
 
 #funcion para dimensionar la pantalla de logeo

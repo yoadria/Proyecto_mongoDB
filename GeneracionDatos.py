@@ -1,40 +1,45 @@
 from pymongo import MongoClient
 from faker import Faker
+import Conexion
 import random
 
 # Configurar la conexión a MongoDB
-client = MongoClient("mongodb://localhost:27017/")
-db = client["ProyectoDB"]  # Nombre de la base de datos
 
-# Colecciones
+client = Conexion.conexion()
+
+db = client["ProyectoDB"]
 pacientes_col = db["pacientes"]
 medicos_col = db["medicos"]
 citas_col = db["citas"]
 
-def generar_datos():
+def generar_datos(): 
 
     # Generar datos aleatorios para pacientes
     fake = Faker()
     pacientes = []
 
     for _ in range(10):
+
+
         pacientes.append({
             "nombre": fake.name(),
             "edad": random.randint(18, 90),
             "direccion": fake.address(),
-            "telefono": fake.phone_number(),
+            "telefono": "6" + str(random.randint(0,99999999)),
             "email": fake.email()
         })
     pacientes_col.insert_many(pacientes)
 
     # Generar datos aleatorios para médicos
     especialidades = ["Cardiología", "Dermatología", "Pediatría", "Neurología", "Oncología"]
+
     medicos = []
     for _ in range(5):
+
         medicos.append({
             "nombre": fake.name(),
             "especialidad": random.choice(especialidades),
-            "telefono": fake.phone_number(),
+            "telefono": "6" + str(random.randint(0,99999999)),
             "email": fake.email()
         })
     medicos_col.insert_many(medicos)
@@ -43,8 +48,9 @@ def generar_datos():
     citas = []
     for _ in range(20):
         citas.append({
-            "paciente_id": random.choice(pacientes)["_id"],  # Referencia a paciente
-            "medico_id": random.choice(medicos)["_id"],      # Referencia a médico
+
+            "paciente": (random.choice(pacientes)["_id"],random.choice(pacientes)["nombre"]),  # Referencia a paciente
+            "medico": (random.choice(medicos)["_id"], random.choice(medicos)["nombre"]),     # Referencia a médico
             "fecha": fake.date_time_this_year(),
             "motivo": fake.sentence(nb_words=6)
         })

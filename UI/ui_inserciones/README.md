@@ -1,4 +1,4 @@
-# A ui_login Flet app
+# A ui_inserciones Flet app
 
 An example of a minimal Flet app.
 

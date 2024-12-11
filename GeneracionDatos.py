@@ -3,7 +3,7 @@ from faker import Faker
 import Conexion
 import random
 
-# Configurar la conexión a MongoDB
+ # Configurar la conexión a MongoDB
 
 client = Conexion.conexion()
 

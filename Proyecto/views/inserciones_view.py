@@ -155,33 +155,22 @@ class InsercionesView:
         from views import AlertView  # Para mostrar notificaciones
 
         # Mapeo de colecciones con sus campos correspondientes
-        collection_map = {
+        mapeado_colecciones = {
             "Paciente": self.page.controls[0].controls[1],  # Contenedor paciente_fields
             "Médico": self.page.controls[0].controls[2],    # Contenedor medico_fields
             "Cita": self.page.controls[0].controls[3],      # Contenedor cita_fields
         }
 
         # Obtener los campos del contenedor activo
-        active_container = collection_map.get(self.collection)
+        contenedor_activo = mapeado_colecciones.get(self.collection)
 
-        # if not active_container:
-        #     # Mostrar advertencia si no hay una colección seleccionada
-        #     alerta = AlertView(
-        #         titulo="Advertencia",
-        #         mensaje="Seleccione una colección antes de registrar datos.",
-        #         page=self.page
-        #     )
-        #     alerta.open_dialog()
-        #     return
-
-        # Recoger valores de los campos dinámicamente
-        data = {}
-        for control in active_container.controls:
+        datos = {}
+        for control in contenedor_activo.controls:
             if isinstance(control, ft.TextField):
-                data[control.label.lower().replace(" ", "_")] = control.value
+                datos[control.label.lower().replace(" ", "_")] = control.value
 
         # Validar si hay campos vacíos
-        if any(not value for value in data.values()):
+        if any(not value for value in datos.values()):
             alerta = AlertView(
                 titulo="Advertencia",
                 mensaje="No pueden haber campos vacíos.",
@@ -190,9 +179,10 @@ class InsercionesView:
             alerta.open_dialog()
             return
 
+
         # Intentar la inserción en la base de datos
         try:
-            insert(self.collection.lower() + "s", data)  # Inserta en la colección correspondiente
+            insert(self.collection.lower() + "s", datos)  # Inserta en la colección correspondiente
             alerta = AlertView(
                 titulo="Éxito",
                 mensaje="Datos registrados correctamente.",
@@ -200,6 +190,7 @@ class InsercionesView:
             )
             alerta.open_dialog()
             self.reset()  # Limpia los campos después de registrar
+            
         except Exception as ex:
             alerta = AlertView(
                 titulo="Error",

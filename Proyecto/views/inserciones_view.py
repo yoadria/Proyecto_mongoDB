@@ -149,52 +149,64 @@ class InsercionesView:
 
     def save_data(self, e):
 
-        '''Metodo que llama a la funcion insert de crud_operations.py'''
+        '''Método para guardar los datos según la colección seleccionada'''
 
         from services import insert
-        from views import AlertView  # esta instancia llama a la clase AlertView para las notificaciones
-        if self.collection == "Médico":
-            medico = {
-                "nombre": self.medico_name.value, # valor del campo nombre
-                "especialidad": self.medico_especialidad.value, # valor del campo especialidad
-                "telefono": self.medico_tf.value, # valor del campo telefono
-                "email": self.medico_email.value, # valor del campo email
-            }
+        from views import AlertView  # Para mostrar notificaciones
 
-            try:
-                # Validar que los campos no estén vacíos
-                if not medico["nombre"] or not medico["especialidad"] or not medico["telefono"] or not medico["email"]:
-                    # mostrar mensage de campos vacios
-                    alerta = AlertView(
-                        titulo="Advertencia",
-                        mensaje="No pueden haber campos vacíos.",
-                        page=self.page
-                    )
-                    alerta.open_dialog()
-                    self.reset()
-                    return
+        # Mapeo de colecciones con sus campos correspondientes
+        collection_map = {
+            "Paciente": self.page.controls[0].controls[1],  # Contenedor paciente_fields
+            "Médico": self.page.controls[0].controls[2],    # Contenedor medico_fields
+            "Cita": self.page.controls[0].controls[3],      # Contenedor cita_fields
+        }
 
-                insert("medicos", medico)
-                # Mostrar mensaje de éxito
-                alerta = AlertView(
-                    titulo="Éxito",
-                    mensaje="Datos registrados correctamente.",
-                    page=self.page
-                )
-                alerta.open_dialog()
-                self.reset() # Limpiar los campos al volver a la página principal  
-                return
+        # Obtener los campos del contenedor activo
+        active_container = collection_map.get(self.collection)
 
-            except ValueError:
-                # Mostrar mensaje de error
-                alerta = AlertView(
-                    titulo="Error",
-                    mensaje="Ha ocurrido un error inesperado lo sentimos.",
-                    page=self.page
-                )
-                alerta.open_dialog()
-                self.reset()
-                return
+        # if not active_container:
+        #     # Mostrar advertencia si no hay una colección seleccionada
+        #     alerta = AlertView(
+        #         titulo="Advertencia",
+        #         mensaje="Seleccione una colección antes de registrar datos.",
+        #         page=self.page
+        #     )
+        #     alerta.open_dialog()
+        #     return
+
+        # Recoger valores de los campos dinámicamente
+        data = {}
+        for control in active_container.controls:
+            if isinstance(control, ft.TextField):
+                data[control.label.lower().replace(" ", "_")] = control.value
+
+        # Validar si hay campos vacíos
+        if any(not value for value in data.values()):
+            alerta = AlertView(
+                titulo="Advertencia",
+                mensaje="No pueden haber campos vacíos.",
+                page=self.page
+            )
+            alerta.open_dialog()
+            return
+
+        # Intentar la inserción en la base de datos
+        try:
+            insert(self.collection.lower() + "s", data)  # Inserta en la colección correspondiente
+            alerta = AlertView(
+                titulo="Éxito",
+                mensaje="Datos registrados correctamente.",
+                page=self.page
+            )
+            alerta.open_dialog()
+            self.reset()  # Limpia los campos después de registrar
+        except Exception as ex:
+            alerta = AlertView(
+                titulo="Error",
+                mensaje=f"Ha ocurrido un error inesperado: {ex}",
+                page=self.page
+            )
+            alerta.open_dialog()
             
 
 

@@ -9,20 +9,23 @@ class InsercionesView:
         '''Constructor de la clase'''
 
         self.page = page
-        self.collection = ""  # esta variable guardara en que coleccion se guardaran los datos depende de los campos desplegados
+        self.collection = ""  # esta variable guardará en qué colección se guardarán los datos
 
-        # estos son los campos dinamico de medico, solo he trabajado con esto para la prueba 
-        # hay que mirar si lo hacemos asi o de la manera ya estructurada
+        # Define los campos de médico como atributos de la clase
         self.medico_name = ft.TextField(label="Nombre del Médico", width=300)
         self.medico_especialidad = ft.TextField(label="Especialidad", width=300)
         self.medico_tf = ft.TextField(label="Teléfono", width=300)
         self.medico_email = ft.TextField(label="E-mail del médico", width=300)
 
-    def build(self):
-        '''Metodo que construlle la pagina Insersiones'''
+        # Contenedores para campos dinámicos
+        self.paciente_fields = ft.Column(visible=False)
+        self.medico_fields = ft.Column(visible=False)
+        self.cita_fields = ft.Column(visible=False)
 
-        
-        self.page.title = "Insersiones"
+    def build(self):
+        '''Método que construye la página de Inserciones'''
+
+        self.page.title = "Inserciones"
         self.page.vertical_alignment = ft.MainAxisAlignment.START
         self.page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
         self.page.window_width = 700
@@ -31,24 +34,8 @@ class InsercionesView:
         self.page.window_resizable = False
         self.page.window_full_screen = False
 
-        # Contenedores dinámicos para mostrar/ocultar los campos
-        paciente_fields = ft.Column(visible=False)
-        medico_fields = ft.Column(visible=False)
-        cita_fields = ft.Column(visible=False)
-
-        
-        def mostrar_campos(tipo):
-            '''Metodo para mostrar campos dinámicamente según el botón presionado'''
-            self.collection = tipo
-
-            paciente_fields.visible = tipo == "Paciente"
-            medico_fields.visible = tipo == "Médico"
-            cita_fields.visible = tipo == "Cita"
-            self.page.update()
-
-            
-        # Contenido de los campos dinámicos
-        paciente_fields.controls = [
+        # Define los campos dentro de los contenedores
+        self.paciente_fields.controls = [
             ft.TextField(label="Nombre del Paciente", width=300),
             ft.TextField(label="Edad del Paciente", width=300),
             ft.TextField(label="Dirección del Paciente", width=300),
@@ -56,21 +43,19 @@ class InsercionesView:
             ft.TextField(label="E-mail del Paciente", width=300)
         ]
 
-        medico_fields.controls = [
-            # estos atributos ya estan definidos arriba, otra forma de hacerlo 
+        self.medico_fields.controls = [
             self.medico_name,
             self.medico_especialidad, 
             self.medico_tf,
             self.medico_email 
         ]
 
-        cita_fields.controls = [
+        self.cita_fields.controls = [
             ft.TextField(label="Paciente de la cita", width=300),
             ft.TextField(label="Médico de la Cita", width=300),
             ft.TextField(label="Fecha de la Cita", width=300),
             ft.TextField(label="Motivo de la Cita", width=300)
         ]
-
 
         # Crear los botones principales
         botones = ft.Column(
@@ -79,19 +64,19 @@ class InsercionesView:
                     text="Paciente",
                     width=300,
                     height=50,
-                    on_click=lambda e: mostrar_campos("Paciente"),
+                    on_click=lambda e: self.mostrar_campos("Paciente"),
                 ),
                 ft.ElevatedButton(
                     text="Médico",
                     width=300,
                     height=50,
-                    on_click=lambda e: mostrar_campos("Médico"),
+                    on_click=lambda e: self.mostrar_campos("Médico"),
                 ),
                 ft.ElevatedButton(
                     text="Cita",
                     width=300,
                     height=50,
-                    on_click=lambda e: mostrar_campos("Cita"),
+                    on_click=lambda e: self.mostrar_campos("Cita"),
                 ),
             ],
             alignment=ft.MainAxisAlignment.CENTER,
@@ -102,7 +87,7 @@ class InsercionesView:
         self.page.add(
             ft.Container(
                 content=ft.Column(
-                    controls=[botones, paciente_fields, medico_fields, cita_fields],
+                    controls=[botones, self.paciente_fields, self.medico_fields, self.cita_fields],
                     alignment=ft.MainAxisAlignment.CENTER,
                     spacing=20,
                 ),
@@ -116,7 +101,7 @@ class InsercionesView:
                     text="Registrar",
                     width=200,
                     height=50,
-                    on_click=self.save_data, # Funcion para guardar los datos del medico
+                    on_click=self.save_data,  # Función para guardar los datos del médico
                 ),
                 ft.ElevatedButton(
                     text="Borrar",
@@ -127,7 +112,7 @@ class InsercionesView:
                     text="Volver",
                     width=200,
                     height=50,
-                    on_click=self.ir_a_main, # Funcion para volver a pagina principal
+                    on_click=self.ir_a_main,  # Función para volver a página principal
                 ),
             ],
             alignment=ft.MainAxisAlignment.CENTER,
@@ -135,9 +120,17 @@ class InsercionesView:
         )
         self.page.add(botones_inferiores)
 
-
         self.page.update()
-    
+
+    def mostrar_campos(self, tipo):
+        '''Método para mostrar campos dinámicamente según el botón presionado'''
+        self.collection = tipo
+
+        self.paciente_fields.visible = tipo == "Paciente"
+        self.medico_fields.visible = tipo == "Médico"
+        self.cita_fields.visible = tipo == "Cita"
+        self.page.update()
+
     def ir_a_main(self, e):
         from views import MainView
         # Limpiar la página actual
@@ -148,7 +141,7 @@ class InsercionesView:
         main_view.build()
 
     def save_data(self, e):
-
+        
         '''Método para guardar los datos según la colección seleccionada'''
 
         from services import insert
@@ -156,9 +149,9 @@ class InsercionesView:
 
         # Mapeo de colecciones con sus campos correspondientes
         mapeado_colecciones = {
-            "Paciente": self.page.controls[0].controls[1],  # Contenedor paciente_fields
-            "Médico": self.page.controls[0].controls[2],    # Contenedor medico_fields
-            "Cita": self.page.controls[0].controls[3],      # Contenedor cita_fields
+            "Paciente": self.paciente_fields,  # Acceder directamente a las variables
+            "Médico": self.medico_fields,
+            "Cita": self.cita_fields,
         }
 
         # Obtener los campos del contenedor activo
@@ -179,7 +172,6 @@ class InsercionesView:
             alerta.open_dialog()
             return
 
-
         # Intentar la inserción en la base de datos
         try:
             insert(self.collection.lower() + "s", datos)  # Inserta en la colección correspondiente
@@ -190,7 +182,7 @@ class InsercionesView:
             )
             alerta.open_dialog()
             self.reset()  # Limpia los campos después de registrar
-            
+
         except Exception as ex:
             alerta = AlertView(
                 titulo="Error",
@@ -198,12 +190,9 @@ class InsercionesView:
                 page=self.page
             )
             alerta.open_dialog()
-            
-
-
 
     def reset(self):
-
+        '''Resetea los campos y vuelve a construir la página'''
         self.page.clean()
         self.collection = ""
         self.medico_name = ft.TextField(label="Nombre del Médico", width=300)
@@ -211,6 +200,7 @@ class InsercionesView:
         self.medico_tf = ft.TextField(label="Teléfono", width=300)
         self.medico_email = ft.TextField(label="E-mail del médico", width=300)
         self.build()
+
 
      
 

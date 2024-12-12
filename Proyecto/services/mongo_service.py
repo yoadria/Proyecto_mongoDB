@@ -3,7 +3,7 @@ from pymongo import MongoClient
 
 class MongoService:
     
-    def __init__(self, uri="mongodb://localhost:27017", db_name="nuevabase"):
+    def __init__(self, uri="mongodb://localhost:27017", db_name="ProyectoDB"):
         self.client = MongoClient(uri)
         self.db = self.client[db_name]
 

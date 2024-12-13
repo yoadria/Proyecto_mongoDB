@@ -70,7 +70,7 @@ class InsercionesView:
                     text="Médico",
                     width=300,
                     height=50,
-                    on_click=lambda e: self.mostrar_campos("Médico"),
+                    on_click=lambda e: self.mostrar_campos("Medico"),
                 ),
                 ft.ElevatedButton(
                     text="Cita",
@@ -127,7 +127,7 @@ class InsercionesView:
         self.collection = tipo
 
         self.paciente_fields.visible = tipo == "Paciente"
-        self.medico_fields.visible = tipo == "Médico"
+        self.medico_fields.visible = tipo == "Medico"
         self.cita_fields.visible = tipo == "Cita"
         self.page.update()
 
@@ -150,7 +150,7 @@ class InsercionesView:
         # Mapeo de colecciones con sus campos correspondientes
         mapeado_colecciones = {
             "Paciente": self.paciente_fields,  # Acceder directamente a las variables
-            "Médico": self.medico_fields,
+            "Medico": self.medico_fields,
             "Cita": self.cita_fields,
         }
 

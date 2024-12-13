@@ -57,6 +57,14 @@ class InsercionesView:
             ft.TextField(label="Motivo de la Cita", width=300)
         ]
 
+        # Estilo de los botones (color, bordes redondeados y tamaño)
+        button_style = ft.ButtonStyle(
+            bgcolor="#FFA07A",
+            color="black",
+            overlay_color="#D35400",  # Color al hacer clic
+            shape=ft.RoundedRectangleBorder(radius=10)  # Bordes redondeados
+        )
+
         # Crear los botones principales
         botones = ft.Column(
             controls=[
@@ -64,18 +72,21 @@ class InsercionesView:
                     text="Paciente",
                     width=300,
                     height=50,
+                    style=button_style,
                     on_click=lambda e: self.mostrar_campos("Paciente"),
                 ),
                 ft.ElevatedButton(
                     text="Médico",
                     width=300,
                     height=50,
+                    style=button_style,
                     on_click=lambda e: self.mostrar_campos("Medico"),
                 ),
                 ft.ElevatedButton(
                     text="Cita",
                     width=300,
                     height=50,
+                    style=button_style,
                     on_click=lambda e: self.mostrar_campos("Cita"),
                 ),
             ],
@@ -101,17 +112,20 @@ class InsercionesView:
                     text="Registrar",
                     width=200,
                     height=50,
+                    style=button_style,
                     on_click=self.save_data,  # Función para guardar los datos del médico
                 ),
                 ft.ElevatedButton(
                     text="Borrar",
                     width=200,
                     height=50,
+                    style=button_style,
                 ),
                 ft.ElevatedButton(
                     text="Volver",
                     width=200,
                     height=50,
+                    style=button_style,
                     on_click=self.ir_a_main,  # Función para volver a página principal
                 ),
             ],

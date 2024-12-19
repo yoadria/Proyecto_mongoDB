@@ -57,14 +57,6 @@ class InsercionesView:
             ft.TextField(label="Motivo de la Cita", width=300)
         ]
 
-        # Estilo de los botones (color, bordes redondeados y tamaño)
-        button_style = ft.ButtonStyle(
-            bgcolor="#FFA07A",
-            color="black",
-            overlay_color="#D35400",  # Color al hacer clic
-            shape=ft.RoundedRectangleBorder(radius=10)  # Bordes redondeados
-        )
-
         # Crear los botones principales
         botones = ft.Column(
             controls=[
@@ -72,21 +64,18 @@ class InsercionesView:
                     text="Paciente",
                     width=300,
                     height=50,
-                    style=button_style,
                     on_click=lambda e: self.mostrar_campos("Paciente"),
                 ),
                 ft.ElevatedButton(
                     text="Médico",
                     width=300,
                     height=50,
-                    style=button_style,
                     on_click=lambda e: self.mostrar_campos("Medico"),
                 ),
                 ft.ElevatedButton(
                     text="Cita",
                     width=300,
                     height=50,
-                    style=button_style,
                     on_click=lambda e: self.mostrar_campos("Cita"),
                 ),
             ],
@@ -112,20 +101,17 @@ class InsercionesView:
                     text="Registrar",
                     width=200,
                     height=50,
-                    style=button_style,
                     on_click=self.save_data,  # Función para guardar los datos del médico
                 ),
                 ft.ElevatedButton(
                     text="Borrar",
                     width=200,
                     height=50,
-                    style=button_style,
                 ),
                 ft.ElevatedButton(
                     text="Volver",
                     width=200,
                     height=50,
-                    style=button_style,
                     on_click=self.ir_a_main,  # Función para volver a página principal
                 ),
             ],
@@ -161,18 +147,17 @@ class InsercionesView:
         from services import insert
         from views import AlertView  # Para mostrar notificaciones
 
-        # Mapeo de colecciones con sus campos correspondientes
+        # Mapeo de colecciones con sus campos correspondientes, nos permite mas adelante acceder directamente a los valores de una ventana
         mapeado_colecciones = {
-            "Paciente": self.paciente_fields,  # Acceder directamente a las variables
+            "Paciente": self.paciente_fields,  
             "Medico": self.medico_fields,
             "Cita": self.cita_fields,
         }
 
-        # Obtener los campos del contenedor activo
-        contenedor_activo = mapeado_colecciones.get(self.collection)
-
-        datos = {}
-        for control in contenedor_activo.controls:
+        # Obtener los campos del contenedor activo.
+        contenedor_activo = mapeado_colecciones.get(self.collection), datos = {}
+        
+        for control in contenedor_activo.controls: #Establecemos nombre segun el nombre del campo TextField
             if isinstance(control, ft.TextField):
                 datos[control.label.lower().replace(" ", "_")] = control.value
 
@@ -188,7 +173,7 @@ class InsercionesView:
 
         # Intentar la inserción en la base de datos
         try:
-            insert(self.collection.lower() + "s", datos)  # Inserta en la colección correspondiente
+            insert(self.collection.lower() + "s", datos)  # Inserta en la colección correspondiente, la "s" es para poner el nombre de la coleccion en plural.
             alerta = AlertView(
                 titulo="Éxito",
                 mensaje="Datos registrados correctamente.",

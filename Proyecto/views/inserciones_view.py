@@ -155,7 +155,7 @@ class InsercionesView:
         }
 
         # Obtener los campos del contenedor activo.
-        contenedor_activo = mapeado_colecciones.get(self.collection), datos = {}
+        contenedor_activo = mapeado_colecciones.get(self.collection); datos = {}
         
         for control in contenedor_activo.controls: #Establecemos nombre segun el nombre del campo TextField
             if isinstance(control, ft.TextField):

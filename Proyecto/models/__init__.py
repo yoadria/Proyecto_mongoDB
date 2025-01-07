@@ -1,4 +1,5 @@
-from db_models import Paciente, Cita, Medico
+from .db_models import Paciente, Cita, Medico
+
 
 '''
 fichero que empaqueta toda la interfaz

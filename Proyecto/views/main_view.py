@@ -58,6 +58,7 @@ class MainView:
                         width=300,
                         height=50,
                         style=button_style,
+                        on_click=self.ir_a_modificaciones,
                     ),
                     ft.ElevatedButton(
                         text="Eliminar Datos",
@@ -119,3 +120,10 @@ class MainView:
         self.page.clean()  # Limpiar la página actual
         submenu_view = LeerViews(self.page)
         submenu_view.build()
+
+    def ir_a_modificaciones(self, e):
+    
+        from views import ModificarViews
+        self.page.clean()  # Limpiar la página actual
+        modificar_view = ModificarViews(self.page)
+        modificar_view.build()

@@ -1,8 +1,50 @@
 from .mongo_service import MongoService
+from utils.validators import validacion_id
 
 db = MongoService()
 
-def insert(collection_name, data):
-    collection = db.get_collection(collection_name)
-    result = collection.insert_one(data)
-    return result.inserted_id
+def insert_data(collection_name, data):
+    """Inserta un documento en la colección especificada."""
+    try:
+        # Validar que el ID no exista previamente
+        if collection_name != 'Citas':
+            validacion_id(collection_name, data["DNI"])
+        collection = db.get_collection(collection_name)
+        result = collection.insert_one(data)
+        return result.inserted_id
+
+    except Exception as e:
+        raise Exception(f"Error al insertar datos: {str(e)}")
+
+def read_data(collection_name):
+    """Obtiene todos los documentos de la colección especificada."""
+    try:
+        collection = db.get_collection(collection_name)
+        datos = list(collection.find())
+        if not datos:
+            raise Exception(f"No se encontraron datos en la colección '{collection_name}'.")
+        return datos
+
+    except Exception as e:
+        raise Exception(f"Error al obtener datos: {str(e)}")
+
+def update_data(collection_name, query_filter, update_values):
+    
+    try:
+        collection = db.get_collection(collection_name)
+        
+        # Validar que el documento existe antes de actualizar
+        existing_document = collection.find_one(query_filter)
+        if not existing_document:
+            raise Exception(f"No se encontró el documento con el filtro: {query_filter}")
+        
+        # Realizar la actualización
+        result = collection.update_one(query_filter, {"$set": update_values})
+        
+        if result.modified_count == 0:
+            raise Exception("No se realizaron cambios, verifica los valores proporcionados.")
+        
+        return result
+
+    except Exception as e:
+        raise Exception(f"Error al actualizar datos: {str(e)}")

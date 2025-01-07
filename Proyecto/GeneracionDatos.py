@@ -1,16 +1,16 @@
 from pymongo import MongoClient
 from faker import Faker
-import Conexion
+from services.mongo_service import MongoService
 import random
 
  # Configurar la conexión a MongoDB
 
-client = Conexion.conexion()
+client = MongoService()
 
-db = client["ProyectoDB"]
-pacientes_col = db["pacientes"]
-medicos_col = db["medicos"]
-citas_col = db["citas"]
+db = client.db
+pacientes_col = db["Pacientes"]
+medicos_col = db["Medicos"]
+citas_col = db["Citas"]
 
 def generar_datos(): 
 
@@ -23,6 +23,7 @@ def generar_datos():
 
         pacientes.append({
             "nombre": fake.name(),
+            "DNI": f"{random.randint(10000000, 99999999)}{random.choice('TRWAGMYFPDXBNJZSQVHLCKE')}",
             "edad": random.randint(18, 90),
             "direccion": fake.address(),
             "telefono": "6" + str(random.randint(0,99999999)),
@@ -38,6 +39,7 @@ def generar_datos():
 
         medicos.append({
             "nombre": fake.name(),
+            "DNI": f"{random.randint(10000000, 99999999)}{random.choice('TRWAGMYFPDXBNJZSQVHLCKE')}",
             "especialidad": random.choice(especialidades),
             "telefono": "6" + str(random.randint(0,99999999)),
             "email": fake.email()
@@ -49,10 +51,11 @@ def generar_datos():
     for _ in range(20):
         citas.append({
 
-            "paciente": (random.choice(pacientes)["_id"],random.choice(pacientes)["nombre"]),  # Referencia a paciente
-            "medico": (random.choice(medicos)["_id"], random.choice(medicos)["nombre"]),     # Referencia a médico
+            "paciente": (random.choice(pacientes)["DNI"],random.choice(pacientes)["nombre"]),  # Referencia a paciente
+            "medico": (random.choice(medicos)["DNI"], random.choice(medicos)["nombre"]),     # Referencia a médico
             "fecha": fake.date_time_this_year(),
-            "motivo": fake.sentence(nb_words=6)
+            "motivo": fake.sentence(nb_words=6),
+            "nro_citas":f"{random.randint(10000000, 99999999)}"
         })
     citas_col.insert_many(citas)
 

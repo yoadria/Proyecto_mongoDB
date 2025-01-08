@@ -115,8 +115,8 @@ class InsercionesView:
                 value = control.value
                 datos[key] = value
 
-        if 'dni' in datos: # DNI se guarda en mayusculas
-            datos['dni'] = datos['dni'].upper()
+        if 'dni' in datos:
+            datos['DNI'] = datos.pop('dni')
         
 
         # Validar campos vacíos

@@ -8,9 +8,9 @@ import random
 client = MongoService()
 
 db = client.db
-pacientes_col = db["Pacientes"]
-medicos_col = db["Medicos"]
-citas_col = db["Citas"]
+pacientes_col = db["pacientes"]
+medicos_col = db["medicos"]
+citas_col = db["citas"]
 
 def generar_datos(): 
 

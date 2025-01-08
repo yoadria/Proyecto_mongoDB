@@ -106,12 +106,18 @@ class InsercionesView:
         from services import insert_data
         from views import AlertView
 
-        # Extraer datos del contenedor dinámico
-        datos = {
-            control.label.lower(): control.value
-            for control in self.fields.controls
-            if isinstance(control, ft.TextField)
-        }
+        # Extraer datos del contenedor de forma dinamica
+        # Usamos las claves y valores de los controles tipo TextField
+        datos = {}
+        for control in self.fields.controls:
+            if isinstance(control, ft.TextField):
+                key = control.label.lower()
+                value = control.value
+                datos[key] = value
+
+        if 'dni' in datos: # DNI se guarda en mayusculas
+            datos['dni'] = datos['dni'].upper()
+        
 
         # Validar campos vacíos
         if any(not value for value in datos.values()):
@@ -143,7 +149,7 @@ class InsercionesView:
                 page=self.page,
             )
             alerta.open_dialog()
-
+            
     def ir_a_main(self, e):
         from views import MainView
 

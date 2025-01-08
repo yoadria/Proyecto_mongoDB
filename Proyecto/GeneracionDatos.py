@@ -55,7 +55,7 @@ def generar_datos():
             "medico": (random.choice(medicos)["DNI"], random.choice(medicos)["nombre"]),     # Referencia a médico
             "fecha": fake.date_time_this_year(),
             "motivo": fake.sentence(nb_words=6),
-            "nro_cita":f"{random.randint(10000000, 99999999)}"
+            "nro_citas":f"{random.randint(10000000, 99999999)}"
         })
     citas_col.insert_many(citas)
 

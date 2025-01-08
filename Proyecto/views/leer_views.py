@@ -2,10 +2,6 @@ import flet as ft
 from services.crud_operations import read_data
 from utils.style import button_style, estilo_encabezado, estilo_celda, estilo_tabla
 
-'''
-Fichero que contiene la interfaz para leer los datos de una base de datos MongoDB
-'''
-
 class LeerViews:
     def __init__(self, page):
         '''Constructor de la clase'''
@@ -19,8 +15,12 @@ class LeerViews:
         self.page.title = "Leer"
         self.page.vertical_alignment = ft.MainAxisAlignment.START
         self.page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
-        self.page.window_width = 800
-        self.page.window_height = 600
+
+        #pantalla completa para poder ver bien la tabla
+        self.page.window_full_screen = True 
+
+        self.page.window_width = 1000  # Aumentamos el tamaño de la ventana
+        self.page.window_height = 700  # Aumentamos la altura de la ventana
 
         self.page.update()
 
@@ -57,15 +57,19 @@ class LeerViews:
                                 fila_filtrada[key] = value
                         filas.append(fila_filtrada)
 
-                    # Crear tabla con los datos filtrados utilizando estilos
+                    # Crear tabla con los datos filtrados utilizando los estilos proporcionados
+                    tabla = estilo_tabla(
+                        columns=[estilo_encabezado(col) for col in columnas],
+                        rows=[ft.DataRow(cells=[estilo_celda(str(fila[col])) for col in columnas]) for fila in filas]
+                    )
+
+                    # Aplicar el estilo de la tabla
                     tabla_fields.controls = [
-                        estilo_tabla(
-                            columns=[estilo_encabezado(col) for col in columnas],
-                            rows=[
-                                ft.DataRow(cells=[
-                                    estilo_celda(str(fila[col])) for col in columnas
-                                ]) for fila in filas
-                            ]
+                        ft.Column(
+                            controls=[tabla],
+                            scroll=ft.ScrollMode.AUTO,  # Desplazamiento automático si es necesario
+                            height=500,  # Ajustamos la altura de la tabla
+                            width=950,  # Ancho de la tabla
                         ),
                         ft.ElevatedButton(
                             text="Volver",

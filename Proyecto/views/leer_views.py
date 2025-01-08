@@ -1,5 +1,6 @@
 import flet as ft
 from services.crud_operations import read_data
+from utils.style import button_style, estilo_encabezado, estilo_celda, estilo_tabla
 
 '''
 Fichero que contiene la interfaz para leer los datos de una base de datos MongoDB
@@ -56,24 +57,22 @@ class LeerViews:
                                 fila_filtrada[key] = value
                         filas.append(fila_filtrada)
 
-                    # Crear tabla con los datos filtrados
+                    # Crear tabla con los datos filtrados utilizando estilos
                     tabla_fields.controls = [
-                        
-                        ft.DataTable(
-                            #Crear las columnas
-                            columns=[ft.DataColumn(ft.Text(col)) for col in columnas],
-                            # Crear las filas
+                        estilo_tabla(
+                            columns=[estilo_encabezado(col) for col in columnas],
                             rows=[
                                 ft.DataRow(cells=[
-                                    ft.DataCell(ft.Text(str(fila[col]))) for col in columnas
+                                    estilo_celda(str(fila[col])) for col in columnas
                                 ]) for fila in filas
                             ]
                         ),
                         ft.ElevatedButton(
                             text="Volver",
+                            style=button_style,
                             width=300,
                             height=50,
-                            on_click=volver_a_menu_principal
+                            on_click=volver_a_menu_principal  # Conectar botón "Volver"
                         )
                     ]
 
@@ -82,6 +81,7 @@ class LeerViews:
                         ft.Text("No hay datos disponibles.", color=ft.colors.RED),
                         ft.ElevatedButton(
                             text="Volver",
+                            style=button_style,
                             width=300,
                             height=50,
                             on_click=volver_a_menu_principal
@@ -93,6 +93,7 @@ class LeerViews:
                     ft.Text(f"Error al cargar los datos: {str(e)}", color=ft.colors.RED),
                     ft.ElevatedButton(
                         text="Volver",
+                        style=button_style,
                         width=300,
                         height=50,
                         on_click=volver_a_menu_principal
@@ -101,31 +102,49 @@ class LeerViews:
 
             self.page.update()
 
-
         def volver_a_menu_principal(e):
             '''Método para volver al menú principal'''
             botones_fields.visible = True
             tabla_fields.visible = False
             self.page.update()
 
+        def ir_a_main(e):
+            from views import MainView
+            # Limpiar la página actual
+            self.page.clean()
+
+            # Crear una instancia de MainView y construirla
+            main_view = MainView(self.page)
+            main_view.build()
+
         botones_fields.controls = [
             ft.ElevatedButton(
                 text="Paciente",
+                style=button_style,
                 width=300,
                 height=50,
                 on_click=lambda e: mostrar_campos("Pacientes"),
             ),
             ft.ElevatedButton(
                 text="Médico",
+                style=button_style,
                 width=300,
                 height=50,
                 on_click=lambda e: mostrar_campos("Medicos"),
             ),
             ft.ElevatedButton(
                 text="Cita",
+                style=button_style,
                 width=300,
                 height=50,
                 on_click=lambda e: mostrar_campos("Citas"),
+            ),
+            ft.ElevatedButton(
+                text="Volver",
+                style=button_style,
+                width=300,
+                height=50,
+                on_click=lambda e: ir_a_main("Volver"),
             )
         ]
 

@@ -1,5 +1,5 @@
 import flet as ft
-
+from utils.style import button_style
 '''
 Fichero que contiene la clase de la página principal
 '''
@@ -26,14 +26,6 @@ class MainView:
         self.page.window_full_screen = False
 
         self.page.bgcolor = ft.colors.WHITE
-
-        # Estilo de los botones (color, bordes redondeados y tamaño)
-        button_style = ft.ButtonStyle(
-            bgcolor="#FFA07A",
-            color="black",
-            overlay_color="#D35400",  # Color al hacer clic
-            shape=ft.RoundedRectangleBorder(radius=10)  # Bordes redondeados
-        )
 
         # Botones principales (Aplicación de estilo general)
         botones = ft.Container(
@@ -65,6 +57,7 @@ class MainView:
                         width=300,
                         height=50,
                         style=button_style,
+                        on_click=self.ir_a_eliminar,
                     ),
                     ft.ElevatedButton(
                         text="Generar Datos",
@@ -127,3 +120,10 @@ class MainView:
         self.page.clean()  # Limpiar la página actual
         modificar_view = ModificarViews(self.page)
         modificar_view.build()
+
+    def ir_a_eliminar(self, e):
+        '''Función que se llama al presionar el botón "Eliminar Datos" y abre la página "EliminarViews".'''
+        from views import DeleteView
+        self.page.clean()  # Limpiar la página actual
+        eliminar_view = DeleteView(self.page)
+        eliminar_view.build()

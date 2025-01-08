@@ -1,16 +1,14 @@
 import flet as ft
-from services.crud_operations import read_data, update_data
 from utils.style import button_style  # Importar los estilos
 
-class ModificarViews:
+class DeleteView:
     def __init__(self, page):
         '''Constructor de la clase'''
         self.page = page
-        self.collection_name = ""  # Nombre de la colección seleccionada
 
     def build(self):
-        '''Método que construye la página Modificar'''
-        self.page.title = "Modificar"
+        '''Método que construye la página Eliminar'''
+        self.page.title = "Eliminar"
         self.page.vertical_alignment = ft.MainAxisAlignment.START
         self.page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
         self.page.window_width = 800
@@ -23,7 +21,6 @@ class ModificarViews:
 
         def seleccionar_tipo(tipo):
             '''Método para seleccionar el tipo de búsqueda y mostrar el formulario de búsqueda'''
-            self.collection_name = tipo
             botones_fields.visible = False
             buscar_fields.visible = True
             formulario_fields.visible = False
@@ -32,14 +29,14 @@ class ModificarViews:
                 ft.TextField(
                     label="DNI" if tipo in ["Pacientes", "Medicos"] else "Nro de Cita",
                     width=300,
-                    on_submit=lambda e: buscar_registro(e.control.value),
+                    on_submit=lambda e: mostrar_formulario(),
                 ),
                 ft.ElevatedButton(
                     text="Buscar",
                     style=button_style,
                     width=300,
                     height=50,
-                    on_click=lambda e: buscar_registro(buscar_fields.controls[0].value),
+                    on_click=lambda e: mostrar_formulario(),
                 ),
                 ft.ElevatedButton(
                     text="Volver",
@@ -51,55 +48,21 @@ class ModificarViews:
             ]
             self.page.update()
 
-        def buscar_registro(identificador):
-            '''Método para buscar un registro específico'''
-            try:
-                if not identificador:
-                    buscar_fields.controls.append(
-                        ft.Text("Por favor, ingrese un identificador válido.", color=ft.colors.RED)
-                    )
-                    self.page.update()
-                    return
-
-                datos = read_data(self.collection_name)
-                filtro = None
-                if self.collection_name in ["Pacientes", "Medicos"]:
-                    filtro = next((fila for fila in datos if str(fila.get("DNI", "")) == identificador), None)
-                elif self.collection_name == "Citas":
-                    filtro = next((fila for fila in datos if str(fila.get("nro_cita", "")) == identificador), None)
-
-                if filtro:
-                    mostrar_formulario([filtro], list(filtro.keys()))
-                else:
-                    buscar_fields.controls.append(
-                        ft.Text("No se encontró ningún registro con ese identificador.", color=ft.colors.RED)
-                    )
-                self.page.update()
-
-            except Exception as e:
-                buscar_fields.controls.append(
-                    ft.Text(f"Error al buscar el registro: {str(e)}", color=ft.colors.RED)
-                )
-                self.page.update()
-
-        def mostrar_formulario(filas, columnas):
-            '''Método para mostrar el formulario de modificación'''
+        def mostrar_formulario():
+            '''Método para mostrar la información del registro y el botón de eliminar'''
             buscar_fields.visible = False
             formulario_fields.visible = True
 
-            inputs = {
-                col: ft.TextField(label=col, value=str(filas[0].get(col, "")), width=300)
-                for col in columnas if col not in ["_id", "DNI", "nro_cita"]
-            }
-
             formulario_fields.controls = [
-                *inputs.values(),
+                ft.TextField(label="Nombre", value="Nombre Ejemplo", width=300, read_only=True),
+                ft.TextField(label="Apellido", value="Apellido Ejemplo", width=300, read_only=True),
+                ft.TextField(label="DNI/Nro de Cita", value="12345678", width=300, read_only=True),
                 ft.ElevatedButton(
-                    text="Guardar Cambios",
+                    text="Eliminar",
                     style=button_style,
                     width=300,
                     height=50,
-                    on_click=lambda e: guardar_cambios(inputs),
+                    on_click=confirmar_eliminacion,
                 ),
                 ft.ElevatedButton(
                     text="Cancelar",
@@ -111,45 +74,33 @@ class ModificarViews:
             ]
             self.page.update()
 
-        def guardar_cambios(inputs):
-            '''Método para guardar los cambios realizados'''
-            try:
-                nuevos_datos = {key: field.value for key, field in inputs.items()}
-                filtro = {}
-                if self.collection_name in ["Pacientes", "Medicos"]:
-                    filtro = {"DNI": nuevos_datos.get("DNI")}
-                elif self.collection_name == "Citas":
-                    filtro = {"nro_cita": nuevos_datos.get("nro_cita")}
-
-                if "DNI" in filtro:
-                    nuevos_datos.pop("DNI", None)
-                elif "nro_cita" in filtro:
-                    nuevos_datos.pop("nro_cita", None)
-
-                update_data(self.collection_name, filtro, nuevos_datos)
-
-                formulario_fields.controls = [
-                    ft.Text("Cambios guardados con éxito.", color=ft.colors.GREEN),
-                    ft.ElevatedButton(
-                        text="Volver",
-                        style=button_style,
-                        width=300,
-                        height=50,
-                        on_click=volver_a_menu_principal,
-                    ),
+        def confirmar_eliminacion(e):
+            '''Método para mostrar un diálogo de confirmación de eliminación'''
+            dialogo = ft.AlertDialog(
+                title=ft.Text("Confirmación"),
+                content=ft.Text("¿Está seguro que desea eliminar este registro?"),
+                actions=[
+                    ft.TextButton("Cancelar", on_click=lambda e: self.page.dialog.dismiss()),
+                    ft.TextButton("Confirmar", on_click=lambda e: mostrar_exito())
                 ]
+            )
+            self.page.dialog = dialogo
+            dialogo.open = True
+            self.page.update()
 
-            except Exception as e:
-                formulario_fields.controls = [
-                    ft.Text(f"Error al guardar cambios: {str(e)}", color=ft.colors.RED),
-                    ft.ElevatedButton(
-                        text="Volver",
-                        style=button_style,
-                        width=300,
-                        height=50,
-                        on_click=volver_a_menu_principal,
-                    ),
-                ]
+        def mostrar_exito():
+            '''Método para mostrar un mensaje de éxito'''
+            self.page.dialog.dismiss()
+            formulario_fields.controls = [
+                ft.Text("Registro eliminado con éxito.", color=ft.colors.GREEN),
+                ft.ElevatedButton(
+                    text="Volver",
+                    style=button_style,
+                    width=300,
+                    height=50,
+                    on_click=volver_a_menu_principal,
+                ),
+            ]
             self.page.update()
 
         def volver_a_menu_principal(e=None):
@@ -167,7 +118,7 @@ class ModificarViews:
             # Crear una instancia de MainView y construirla
             main_view = MainView(self.page)
             main_view.build()
-            
+
         botones_fields.controls = [
             ft.ElevatedButton(
                 text="Paciente",

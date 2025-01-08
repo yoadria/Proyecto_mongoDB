@@ -1,5 +1,6 @@
 import flet as ft
 from models.db_models import Medico, Paciente, Cita
+from utils.style import button_style  # Importar los estilos
 
 class InsercionesView:
     def __init__(self, page):
@@ -22,18 +23,21 @@ class InsercionesView:
             controls=[
                 ft.ElevatedButton(
                     text="Paciente",
+                    style=button_style,
                     width=300,
                     height=50,
                     on_click=lambda e: self.mostrar_campos(Paciente),
                 ),
                 ft.ElevatedButton(
                     text="Médico",
+                    style=button_style,
                     width=300,
                     height=50,
                     on_click=lambda e: self.mostrar_campos(Medico),
                 ),
                 ft.ElevatedButton(
                     text="Cita",
+                    style=button_style,
                     width=300,
                     height=50,
                     on_click=lambda e: self.mostrar_campos(Cita),
@@ -60,12 +64,14 @@ class InsercionesView:
             controls=[
                 ft.ElevatedButton(
                     text="Registrar",
+                    style=button_style,
                     width=200,
                     height=50,
                     on_click=self.save_data,
                 ),
                 ft.ElevatedButton(
                     text="Volver",
+                    style=button_style,
                     width=200,
                     height=50,
                     on_click=self.ir_a_main,
@@ -82,17 +88,15 @@ class InsercionesView:
         """Genera campos dinámicos en función de los atributos del modelo."""
         self.collection = modelo.__name__.lower() + "s"
 
-        #Crea campos utilizando los valores del modelo
-
-        #Obtiene los nombres de los parámetros del constructor
-        atributos = modelo.__init__.__code__.co_varnames[1:] #Basicamente obtiene el nombre de las variables para luego establecer el valor de los campos
+        # Crea campos utilizando los valores del modelo
+        atributos = modelo.__init__.__code__.co_varnames[1:]  # Obtiene los nombres de los parámetros del constructor
 
         campos = [
             ft.TextField(label=atributo.capitalize(), width=300)
             for atributo in atributos
         ]
 
-        #Asigna los campos a la lista de controles
+        # Asigna los campos a la lista de controles
         self.fields.controls = campos
         self.fields.visible = True
         self.page.update()

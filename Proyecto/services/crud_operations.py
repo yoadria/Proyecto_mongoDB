@@ -32,9 +32,11 @@ def update_data(collection_name, query_filter, update_values):
     
     try:
         collection = db.get_collection(collection_name)
-        
+
         # Validar que el documento existe antes de actualizar
+
         existing_document = collection.find_one(query_filter)
+
         if not existing_document:
             raise Exception(f"No se encontró el documento con el filtro: {query_filter}")
         
@@ -48,3 +50,5 @@ def update_data(collection_name, query_filter, update_values):
 
     except Exception as e:
         raise Exception(f"Error al actualizar datos: {str(e)}")
+
+

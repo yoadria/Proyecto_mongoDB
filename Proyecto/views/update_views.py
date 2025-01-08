@@ -87,23 +87,27 @@ class ModificarViews:
             buscar_fields.visible = False
             formulario_fields.visible = True
 
-            inputs = {
-                col: ft.TextField(label=col, value=str(filas[0].get(col, "")), width=300)
-                for col in columnas if col not in ["_id", "DNI", "nro_cita"]
-            }
+            inputs = {};id_oculto = {} #Inicializamos listas que se usaran para el guardado
+
+            for col in columnas: #Se crea el formulario obteniendo los datos dinamicamente de la BD. No se muestra ni el nro_cita ni el DNI
+                if col not in ["_id", "DNI", "nro_cita"]:
+                    value = str(filas[0].get(col, ""))
+                    inputs[col] = ft.TextField(label=col, value=value, width=300)
+                elif col == "DNI":
+                    id_oculto["DNI"] = filas[0].get("DNI", "")
+                elif col == "nro_cita":
+                    id_oculto["nro_cita"] = filas[0].get("nro_cita", "")
 
             formulario_fields.controls = [
                 *inputs.values(),
                 ft.ElevatedButton(
                     text="Guardar Cambios",
-                    style=button_style,
                     width=300,
                     height=50,
-                    on_click=lambda e: guardar_cambios(inputs),
+                    on_click=lambda e: guardar_cambios(inputs, id_oculto),
                 ),
                 ft.ElevatedButton(
                     text="Cancelar",
-                    style=button_style,
                     width=300,
                     height=50,
                     on_click=volver_a_menu_principal,
@@ -111,28 +115,20 @@ class ModificarViews:
             ]
             self.page.update()
 
-        def guardar_cambios(inputs):
+        def guardar_cambios(inputs, filtro):
             '''Método para guardar los cambios realizados'''
             try:
+                # Obtener los valores del formulario
                 nuevos_datos = {key: field.value for key, field in inputs.items()}
-                filtro = {}
-                if self.collection_name in ["Pacientes", "Medicos"]:
-                    filtro = {"DNI": nuevos_datos.get("DNI")}
-                elif self.collection_name == "Citas":
-                    filtro = {"nro_cita": nuevos_datos.get("nro_cita")}
-
-                if "DNI" in filtro:
-                    nuevos_datos.pop("DNI", None)
-                elif "nro_cita" in filtro:
-                    nuevos_datos.pop("nro_cita", None)
-
+                
+                # Llamar a update_data para realizar la actualización
                 update_data(self.collection_name, filtro, nuevos_datos)
 
+                # Mostrar mensaje de éxito
                 formulario_fields.controls = [
                     ft.Text("Cambios guardados con éxito.", color=ft.colors.GREEN),
                     ft.ElevatedButton(
                         text="Volver",
-                        style=button_style,
                         width=300,
                         height=50,
                         on_click=volver_a_menu_principal,
@@ -140,11 +136,11 @@ class ModificarViews:
                 ]
 
             except Exception as e:
+                # Mostrar mensaje de error
                 formulario_fields.controls = [
                     ft.Text(f"Error al guardar cambios: {str(e)}", color=ft.colors.RED),
                     ft.ElevatedButton(
                         text="Volver",
-                        style=button_style,
                         width=300,
                         height=50,
                         on_click=volver_a_menu_principal,

@@ -64,6 +64,7 @@ class MainView:
                         width=300,
                         height=50,
                         style=button_style,
+                        # on_click=self.ir_a_generacion_datos,
                     ),
                     ft.ElevatedButton(
                         text="Salir",
@@ -127,3 +128,10 @@ class MainView:
         self.page.clean()  # Limpiar la página actual
         eliminar_view = DeleteView(self.page)
         eliminar_view.build()
+
+    # def ir_a_generacion_datos (self, e):
+    #     '''Función que se llama al presionar el botón "Generar Datos'''
+    #     from views import DeleteView
+    #     self.page.clean()  # Limpiar la página actual
+    #     eliminar_view = DeleteView(self.page)
+    #     eliminar_view.build()

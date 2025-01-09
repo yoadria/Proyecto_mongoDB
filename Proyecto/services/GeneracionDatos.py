@@ -3,16 +3,14 @@ from faker import Faker
 from services.mongo_service import MongoService
 import random
 
- # Configurar la conexión a MongoDB
-
-client = MongoService()
-
-db = client.db
-pacientes_col = db["pacientes"]
-medicos_col = db["medicos"]
-citas_col = db["citas"]
-
 def generar_datos(): 
+
+    client = MongoService()
+    # Configurar la conexión a MongoDB
+    db = client.db
+    pacientes_col = db["pacientes"]
+    medicos_col = db["medicos"]
+    citas_col = db["citas"]
 
     # Generar datos aleatorios para pacientes
     fake = Faker()

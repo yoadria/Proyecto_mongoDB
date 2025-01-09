@@ -1,6 +1,7 @@
 import flet as ft
 from utils.style import button_style
 from views.alert_view import AlertView, QuestionDialog
+from services.GeneracionDatos import generar_datos
 
 class MainView:
     def __init__(self, page):
@@ -130,15 +131,13 @@ class MainView:
     def ir_a_generacion_datos(self, e):
         '''Función que se llama al presionar el botón "Generar Datos" y muestra un cuadro de diálogo con dos respuestas.'''
 
-        
-        def generar_datos(e):
+        def opcion_si(e):
             #logica para la generación de datos:
-
-
+            generar_datos()
             # Cerrar el diálogo
             question_dialog.close_dialog()
 
-        def cancelar_generacion(e):
+        def opcion_no(e):
             # Cerrar el diálogo
             question_dialog.close_dialog()
 
@@ -149,8 +148,8 @@ class MainView:
             respuesta_1="Sí",
             respuesta_2="No",
             page=self.page,
-            respuesta_1_action=generar_datos,
-            respuesta_2_action=cancelar_generacion,
+            respuesta_1_action=opcion_si,
+            respuesta_2_action=opcion_no,
         )
 
         # Abrir el diálogo

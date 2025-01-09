@@ -16,9 +16,6 @@ class LeerViews:
         self.page.vertical_alignment = ft.MainAxisAlignment.START
         self.page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
-        #pantalla completa para poder ver bien la tabla
-        self.page.window_full_screen = True 
-
         self.page.window_width = 1000  # Aumentamos el tamaño de la ventana
         self.page.window_height = 700  # Aumentamos la altura de la ventana
 

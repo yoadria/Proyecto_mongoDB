@@ -1,8 +1,6 @@
 import flet as ft
 from utils.style import button_style
-'''
-Fichero que contiene la clase de la página principal
-'''
+from views.alert_view import AlertView, QuestionDialog
 
 class MainView:
     def __init__(self, page):
@@ -64,7 +62,7 @@ class MainView:
                         width=300,
                         height=50,
                         style=button_style,
-                        # on_click=self.ir_a_generacion_datos,
+                        on_click=self.ir_a_generacion_datos,
                     ),
                     ft.ElevatedButton(
                         text="Salir",
@@ -116,7 +114,7 @@ class MainView:
         submenu_view.build()
 
     def ir_a_modificaciones(self, e):
-    
+        '''Función que se llama al presionar el botón "Actualizar Datos" y abre la página "ModificarViews".'''
         from views import ModificarViews
         self.page.clean()  # Limpiar la página actual
         modificar_view = ModificarViews(self.page)
@@ -129,9 +127,31 @@ class MainView:
         eliminar_view = DeleteView(self.page)
         eliminar_view.build()
 
-    # def ir_a_generacion_datos (self, e):
-    #     '''Función que se llama al presionar el botón "Generar Datos'''
-    #     from views import DeleteView
-    #     self.page.clean()  # Limpiar la página actual
-    #     eliminar_view = DeleteView(self.page)
-    #     eliminar_view.build()
+    def ir_a_generacion_datos(self, e):
+        '''Función que se llama al presionar el botón "Generar Datos" y muestra un cuadro de diálogo con dos respuestas.'''
+
+        
+        def generar_datos(e):
+            #logica para la generación de datos:
+
+
+            # Cerrar el diálogo
+            question_dialog.close_dialog()
+
+        def cancelar_generacion(e):
+            # Cerrar el diálogo
+            question_dialog.close_dialog()
+
+        # Crear el cuadro de diálogo de pregunta con dos respuestas
+        question_dialog = QuestionDialog(
+            titulo="Generar Datos",
+            pregunta="¿Está seguro de que desea generar los datos?",
+            respuesta_1="Sí",
+            respuesta_2="No",
+            page=self.page,
+            respuesta_1_action=generar_datos,
+            respuesta_2_action=cancelar_generacion,
+        )
+
+        # Abrir el diálogo
+        question_dialog.open_dialog()

@@ -13,8 +13,6 @@ class ModificarViews:
         self.page.title = "Modificar"
         self.page.vertical_alignment = ft.MainAxisAlignment.START
         self.page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
-        self.page.window_width = 800
-        self.page.window_height = 600
         self.page.update()
 
         botones_fields = ft.Column(visible=True)
@@ -33,6 +31,7 @@ class ModificarViews:
                     label="DNI" if tipo in ["Pacientes", "Medicos"] else "Nro de Cita",
                     width=300,
                     on_submit=lambda e: buscar_registro(e.control.value),
+                    color=ft.Colors.BLACK,
                 ),
                 ft.ElevatedButton(
                     text="Buscar",

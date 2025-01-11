@@ -16,13 +16,6 @@ class MainView:
         self.page.vertical_alignment = ft.MainAxisAlignment.CENTER
         self.page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
-        # Tamaño de la ventana
-        self.page.window_width = 400
-        self.page.window_height = 550
-
-        # Evitar que se pueda redimensionar la ventana
-        self.page.window_resizable = False
-        self.page.window_full_screen = False
 
         self.page.bgcolor = ft.colors.WHITE
 

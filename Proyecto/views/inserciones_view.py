@@ -13,10 +13,6 @@ class InsercionesView:
         self.page.title = "Inserciones"
         self.page.vertical_alignment = ft.MainAxisAlignment.START
         self.page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
-        self.page.window_width = 700
-        self.page.window_height = 900
-        self.page.window_resizable = False
-        self.page.window_full_screen = False
 
         # Botones principales para elegir tipo de inserción
         botones = ft.Column(
@@ -60,7 +56,7 @@ class InsercionesView:
         )
 
         # Botones inferiores
-        botones_inferiores = ft.Row(
+        botones_inferiores = ft.Column(
             controls=[
                 ft.ElevatedButton(
                     text="Registrar",
@@ -92,7 +88,7 @@ class InsercionesView:
         atributos = modelo.__init__.__code__.co_varnames[1:]  # Obtiene los nombres de los parámetros del constructor
 
         campos = [
-            ft.TextField(label=atributo.capitalize(), width=300)
+            ft.TextField(label=atributo.capitalize(), width=300, color=ft.colors.BLACK)  # Establece color del texto a negro
             for atributo in atributos
         ]
 
@@ -106,7 +102,7 @@ class InsercionesView:
         from services import insert_data
         from views import AlertView
 
-        # Extraer datos del contenedor de forma dinamica
+        # Extraer datos del contenedor de forma dinámica
         # Usamos las claves y valores de los controles tipo TextField
         datos = {}
         for control in self.fields.controls:

@@ -16,15 +16,15 @@ def estilo_encabezado(texto):
     )
 
 # Estilo de las celdas de las tablas
-def estilo_celda(texto):
+def estilo_celda(texto, fuente_celda=14):
     """Crea un contenedor con estilo para una celda de la tabla."""
     return ft.DataCell(
         ft.Container(
-            content=ft.Text(texto, color="black"),
+            content=ft.Text(texto, color="black", size=fuente_celda),  # Se agrega el tamaño de la fuente
             alignment=ft.alignment.center  # Centra el texto
-            # border=ft.border.all(1, "black"),  # Borde negro
         )
     )
+
 
 # Estilo para la tabla
 def estilo_tabla(columns, rows):

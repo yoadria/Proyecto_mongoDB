@@ -81,7 +81,7 @@ class InsercionesView:
         self.page.update()
 
     def mostrar_campos(self, modelo):
-        from utils.labels import LABELS_MAP
+        from utils import LABELS_MAP
 
         """Genera campos dinámicos en función de los atributos del modelo."""
         self.collection = modelo.__name__.lower() + "s"

@@ -18,7 +18,7 @@ LABELS_MAP = {
     # Para la clase Cita
     "id_paciente": "DNI Paciente",
     "nro_cita": "Número de Cita",
-    "id_medico": "DNI Médico",
+    "id_medico": "DNI Medico",
     "fecha": "Fecha",
     "motivo": "Motivo"
 }

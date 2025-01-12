@@ -89,10 +89,6 @@ class InsercionesView:
         # Crea campos utilizando los valores del modelo
         atributos = modelo.__init__.__code__.co_varnames[1:]  # Obtiene los nombres de los parámetros del constructor
 
-        # campos = [
-        #     ft.TextField(label=atributo.capitalize(), width=300, color=ft.colors.BLACK)  # Establece color del texto a negro
-        #     for atributo in atributos
-        # ]
 
         campos = [
             ft.TextField(
@@ -114,6 +110,7 @@ class InsercionesView:
 
         from services import insert_data
         from views import AlertView
+        from utils import validar_telefono, validar_email, validar_dni, validar_edad
 
         # Extraer datos del contenedor de forma dinámica
         # Usamos las claves y valores de los controles tipo TextField
@@ -137,6 +134,45 @@ class InsercionesView:
             )
             alerta.open_dialog()
             return
+        
+        if self.collection == "pacientes":
+            if not validar_edad(datos["edad"]):
+                alerta = AlertView(
+                    titulo="Error",
+                    mensaje=f"La edad debe ser un número entero.",
+                    page=self.page,
+                )
+                alerta.open_dialog()
+                return
+        
+        if self.collection == "pacientes" or self.collection == "medicos":
+            if not  validar_telefono(datos["telefono"]):
+                alerta = AlertView(
+                    titulo="Error",
+                    mensaje=f"El telefono debe contener 9 digitos.",
+                    page=self.page,
+                )
+                alerta.open_dialog()
+                return
+            if not validar_email(datos["correo electronico"]):
+                alerta = AlertView(
+                    titulo="Error",
+                    mensaje=f"El correo electronico debe tener un formato válido.",
+                    page=self.page,
+                )
+                alerta.open_dialog()
+                return
+            if not validar_dni(datos["DNI"]):
+                alerta = AlertView(
+                    titulo="Error",
+                    mensaje=f"El DNI debe tener 8 digitos  una letra.",
+                    page=self.page,
+                )
+                alerta.open_dialog()
+                return  
+            
+            datos['email'] = datos.pop('correo electronico')
+            
 
         # Intentar insertar en la base de datos
         try:
@@ -152,13 +188,14 @@ class InsercionesView:
             self.page.update()
 
         except Exception as ex:
-            print("entro por aki")
             alerta = AlertView(
                 titulo="Error",
                 mensaje=f"Ha ocurrido un error inesperado: {ex}",
                 page=self.page,
             )
             alerta.open_dialog()
+        
+        print(datos)
             
     def ir_a_main(self, e):
         from views import MainView

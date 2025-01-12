@@ -38,3 +38,20 @@ def validar_telefono(telefono):
         return True
     else:
         return False
+    
+
+def validar_dni(dni):
+    # Expresión regular para 8 dígitos seguidos de una letra
+    patron = r"^\d{8}[a-zA-Z]$"
+    
+    if re.match(patron, dni):
+        return True
+    else:
+        return False
+    
+def validar_edad(edad):
+    try:
+        int(edad) 
+        return True
+    except ValueError:  
+        return False

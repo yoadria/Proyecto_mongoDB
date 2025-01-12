@@ -3,8 +3,6 @@ import flet as ft
 class AlertView:
     def __init__(self, titulo: str, mensaje: str, page: ft.Page):
         """
-        Clase para gestionar alertas en Flet.
-
         Args:
             titulo (str): Título del diálogo.
             mensaje (str): Mensaje del diálogo.

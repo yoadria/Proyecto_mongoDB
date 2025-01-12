@@ -51,7 +51,17 @@ class LeerViews:
                 # Si hay datos, filtramos el campo '_id' de las columnas y filas
                 if datos:
                     # Obtener las columnas sin incluir '_id' y reemplazar "nro_citas" por "numero citas"
-                    columnas = [("numero cita" if col == "nro_cita" else col) for col in datos[0].keys() if col != "_id"]
+
+                    # columnas = [("numero citas" if col == "nro_cita" else col) for col in datos[0].keys() if col != "_id"]
+                    columnas = [
+                        "numero citas" if col == "nro_cita" else 
+                        "DNI paciente" if col == "id_paciente" else
+                        "DNI medico" if col == "id_medico" else 
+                        col 
+                        for col in datos[0].keys() if col != "_id"
+                    ]
+
+
 
                     # Obtener las filas sin incluir '_id'
                     filas = []
@@ -66,9 +76,24 @@ class LeerViews:
                     # Mostrar los datos en formato de tabla o tarjetas
                     if ajustes["vista"] == "tabla":
                         # Crear tabla con los datos filtrados utilizando los estilos proporcionados
+                        # tabla = estilo_tabla(
+                        #     columns=[estilo_encabezado(col) for col in columnas],
+                        #     rows=[ft.DataRow(cells=[estilo_celda(str(fila[col if col != "numero citas" else "nro_cita"]), ajustes["fuente_celda"]) for col in columnas]) for fila in filas]
+                        # )
+
                         tabla = estilo_tabla(
                             columns=[estilo_encabezado(col) for col in columnas],
-                            rows=[ft.DataRow(cells=[estilo_celda(str(fila[col if col != "numero cita" else "nro_cita"]), ajustes["fuente_celda"]) for col in columnas]) for fila in filas]
+                            rows=[ft.DataRow(cells=[
+                                estilo_celda(
+                                    str(fila[
+                                        "nro_cita" if col == "numero citas" else
+                                        "id_paciente" if col == "DNI paciente" else
+                                        "id_medico" if col == "DNI medico" else
+                                        col
+                                    ]), 
+                                    ajustes["fuente_celda"]
+                                ) for col in columnas
+                            ]) for fila in filas]
                         )
 
                         # Aplicar el estilo de la tabla
@@ -92,18 +117,49 @@ class LeerViews:
                         ]
                     elif ajustes["vista"] == "tarjetas":
                         # Crear tarjetas con los datos filtrados y aplicar el color de fondo azul gris
+                        
+                        # tarjetas = [
+                        #     ft.Card(
+                        #         content=ft.Container(
+                        #             content=ft.Column(
+                        #                 controls=[ft.Text(f"{'numero citas' if key == 'nro_cita' else key}: {value}", size=ajustes["fuente_celda"], color=ft.colors.BLACK) for key, value in fila.items()],
+                        #                 spacing=5
+                        #             ),
+                        #             bgcolor=ft.colors.BLUE_GREY_200,  # Color de fondo de las tarjetas
+                        #             width=300,  # Ancho fijo para todas las tarjetas
+
+                        #             height=200,  # Altura fija para todas las tarjetas
+                        #             border_radius=15,  # Bordes redondeados
+                        #             padding=10  # Espaciado interno para contenido
+                        #         ),
+                        #         elevation=2
+                        #     ) for fila in filas
+                        # ]
+
+
                         tarjetas = [
                             ft.Card(
                                 content=ft.Container(
                                     content=ft.Column(
-                                        controls=[ft.Text(f"{'numero cita' if key == 'nro_cita' else key}: {value}", size=ajustes["fuente_celda"], color=ft.colors.BLACK) for key, value in fila.items()],
+                                        controls=[
+                                            ft.Text(
+                                                f"{
+                                                    'numero citas' if key == 'nro_cita' else
+                                                    'DNI paciente' if key == 'id_paciente' else
+                                                    'DNI medico' if key == 'id_medico' else
+                                                    key
+                                                }: {value}", 
+                                                size=ajustes["fuente_celda"], 
+                                                color=ft.colors.BLACK
+                                            ) for key, value in fila.items()
+                                        ],
                                         spacing=5
                                     ),
-                                    bgcolor=ft.colors.BLUE_GREY_200,  # Color de fondo de las tarjetas
-                                    width=300,  # Ancho fijo para todas las tarjetas
-                                    height=200,  # Altura fija para todas las tarjetas
-                                    border_radius=15,  # Bordes redondeados
-                                    padding=10  # Espaciado interno para contenido
+                                    bgcolor=ft.colors.BLUE_GREY_200,
+                                    width=300,
+                                    height=200,
+                                    border_radius=15,
+                                    padding=10
                                 ),
                                 elevation=2
                             ) for fila in filas

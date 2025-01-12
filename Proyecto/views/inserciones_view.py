@@ -2,6 +2,7 @@ import flet as ft
 from models.db_models import Medico, Paciente, Cita
 from utils.style import button_style  # Importar los estilos
 
+
 class InsercionesView:
     def __init__(self, page):
         self.page = page
@@ -80,6 +81,7 @@ class InsercionesView:
         self.page.update()
 
     def mostrar_campos(self, modelo):
+        from utils.labels import LABELS_MAP
 
         """Genera campos dinámicos en función de los atributos del modelo."""
         self.collection = modelo.__name__.lower() + "s"
@@ -87,10 +89,21 @@ class InsercionesView:
         # Crea campos utilizando los valores del modelo
         atributos = modelo.__init__.__code__.co_varnames[1:]  # Obtiene los nombres de los parámetros del constructor
 
+        # campos = [
+        #     ft.TextField(label=atributo.capitalize(), width=300, color=ft.colors.BLACK)  # Establece color del texto a negro
+        #     for atributo in atributos
+        # ]
+
         campos = [
-            ft.TextField(label=atributo.capitalize(), width=300, color=ft.colors.BLACK)  # Establece color del texto a negro
+            ft.TextField(
+                label=LABELS_MAP.get(atributo, atributo.capitalize()),  # Usa el mapeo de etiquetas o capitaliza por defecto
+                width=300,
+                color=ft.colors.BLACK  # Establece el color del texto a negro
+            )
             for atributo in atributos
+            if LABELS_MAP.get(atributo, True) is not False  # Solo muestra campos que hallamos definido en LABELS_MAP
         ]
+
 
         # Asigna los campos a la lista de controles
         self.fields.controls = campos
@@ -139,6 +152,7 @@ class InsercionesView:
             self.page.update()
 
         except Exception as ex:
+            print("entro por aki")
             alerta = AlertView(
                 titulo="Error",
                 mensaje=f"Ha ocurrido un error inesperado: {ex}",

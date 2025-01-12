@@ -1,5 +1,5 @@
 import flet as ft
-from utils.style import button_style
+
 from views.alert_view import AlertView, QuestionDialog
 from services.GeneracionDatos import generar_datos
 
@@ -8,6 +8,7 @@ class MainView:
         self.page = page
 
     def build(self):
+        from utils.style import button_style
         '''Método que construye la página principal'''
 
         self.page.title = "Página Principal"

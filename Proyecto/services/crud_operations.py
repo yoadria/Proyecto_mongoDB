@@ -7,8 +7,11 @@ def insert_data(collection_name, data):
     """Inserta un documento en la colección especificada."""
     try:
         # Validar que el ID no exista previamente
-        if collection_name != 'Citas':
+        if collection_name != 'citas':
+            if "DNI" not in data:
+                raise ValueError("El campo 'DNI' es obligatorio para esta colección.")
             validacion_id(collection_name, data["DNI"])
+        
         collection = db.get_collection(collection_name)
         result = collection.insert_one(data)
         return result.inserted_id

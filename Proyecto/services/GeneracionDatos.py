@@ -49,11 +49,11 @@ def generar_datos():
     for _ in range(20):
         citas.append({
 
-            "paciente": (random.choice(pacientes)["DNI"],random.choice(pacientes)["nombre"]),  # Referencia a paciente
-            "medico": (random.choice(medicos)["DNI"], random.choice(medicos)["nombre"]),     # Referencia a médico
+            "id_paciente": random.choice(pacientes)["DNI"],  # Referencia a paciente
+            "id_medico": random.choice(medicos)["DNI"],     # Referencia a médico
             "fecha": fake.date_time_this_year(),
             "motivo": fake.sentence(nb_words=6),
-            "nro_citas":f"{random.randint(10000000, 99999999)}"
+            "nro_cita":f"{random.randint(10000000, 99999999)}"
         })
     citas_col.insert_many(citas)
 

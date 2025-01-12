@@ -53,6 +53,34 @@ def update_data(collection_name, query_filter, update_values):
 
     except Exception as e:
         raise Exception(f"Error al actualizar datos: {str(e)}")
+    
+def delete_data(collection_name, query_filter):
+    """
+    Elimina un documento de la colección especificada según el filtro proporcionado.
+    """
+    try:
+        collection = db.get_collection(collection_name)
+
+        # Buscar el documento antes de eliminar
+        existing_document = collection.find_one(query_filter)
+
+        if not existing_document:
+            raise Exception(f"No se encontró el documento con el filtro: {query_filter}")
+
+        # Eliminar el documento
+        result = collection.delete_one(query_filter)
+        
+        if result.deleted_count == 0:
+            raise Exception("No se pudo eliminar el documento. Verifica los valores proporcionados.")
+        
+        return {
+            "success": True,
+            "message": "Documento eliminado correctamente.",
+            "data": existing_document
+        }
+
+    except Exception as e:
+        raise Exception(f"Error al eliminar datos: {str(e)}")
 
 
 def get_dni(collection, dni):

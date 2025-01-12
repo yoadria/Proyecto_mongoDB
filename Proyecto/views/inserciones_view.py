@@ -108,7 +108,7 @@ class InsercionesView:
 
     def save_data(self, e):
 
-        from services import insert_data
+        from services import insert_data, get_dni
         from views import AlertView
         from utils import validar_telefono, validar_email, validar_dni, validar_edad
 
@@ -172,6 +172,30 @@ class InsercionesView:
                 return  
             
             datos['email'] = datos.pop('correo electronico')
+        else:
+            if not get_dni('pacientes', datos['dni paciente']):
+                alerta = AlertView(
+                    titulo="Error",
+                    mensaje=f"No se encuentra un paciente con DNI {datos['dni paciente']}.",
+                    page=self.page,
+                )
+                alerta.open_dialog()
+                return
+            
+            if not get_dni('medicos', datos['dni medico']):
+                alerta = AlertView(
+                    titulo="Error",
+                    mensaje=f"No se encuentra un médico con DNI {datos['dni medico']}.",
+                    page=self.page,
+                )
+                alerta.open_dialog()
+                return
+            
+            datos['id_paciente'] = datos.pop('dni paciente')
+            datos['id_medico'] = datos.pop('dni medico')
+            datos['nro_cita'] = datos.pop('numero de cita')
+
+
             
 
         # Intentar insertar en la base de datos

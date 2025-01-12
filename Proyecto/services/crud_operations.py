@@ -55,3 +55,9 @@ def update_data(collection_name, query_filter, update_values):
         raise Exception(f"Error al actualizar datos: {str(e)}")
 
 
+def get_dni(collection, dni):
+    datos = read_data(collection)
+    for persona in datos:
+        if persona["DNI"] == dni:
+            return True
+    return False

@@ -47,11 +47,11 @@ class LeerViews:
             try:
                 # Obtener datos de la colección utilizando crud_operations
                 datos = read_data(self.collection_name)
-
+                
                 # Si hay datos, filtramos el campo '_id' de las columnas y filas
                 if datos:
-                    # Obtener las columnas sin incluir '_id'
-                    columnas = [col for col in datos[0].keys() if col != "_id"]
+                    # Obtener las columnas sin incluir '_id' y reemplazar "nro_citas" por "numero citas"
+                    columnas = [("numero citas" if col == "nro_citas" else col) for col in datos[0].keys() if col != "_id"]
 
                     # Obtener las filas sin incluir '_id'
                     filas = []
@@ -60,14 +60,15 @@ class LeerViews:
                         for key, value in row.items():
                             if key != "_id":
                                 fila_filtrada[key] = value
-                        filas.append(fila_filtrada)
 
+                        filas.append(fila_filtrada)
+                    
                     # Mostrar los datos en formato de tabla o tarjetas
                     if ajustes["vista"] == "tabla":
                         # Crear tabla con los datos filtrados utilizando los estilos proporcionados
                         tabla = estilo_tabla(
                             columns=[estilo_encabezado(col) for col in columnas],
-                            rows=[ft.DataRow(cells=[estilo_celda(str(fila[col]), ajustes["fuente_celda"]) for col in columnas]) for fila in filas]
+                            rows=[ft.DataRow(cells=[estilo_celda(str(fila[col if col != "numero citas" else "nro_citas"]), ajustes["fuente_celda"]) for col in columnas]) for fila in filas]
                         )
 
                         # Aplicar el estilo de la tabla
@@ -95,7 +96,7 @@ class LeerViews:
                             ft.Card(
                                 content=ft.Container(
                                     content=ft.Column(
-                                        controls=[ft.Text(f"{key}: {value}", size=ajustes["fuente_celda"], color=ft.colors.BLACK) for key, value in fila.items()],
+                                        controls=[ft.Text(f"{'numero citas' if key == 'nro_citas' else key}: {value}", size=ajustes["fuente_celda"], color=ft.colors.BLACK) for key, value in fila.items()],
                                         spacing=5
                                     ),
                                     bgcolor=ft.colors.BLUE_GREY_200,  # Color de fondo de las tarjetas

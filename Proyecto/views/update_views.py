@@ -117,10 +117,66 @@ class ModificarViews:
             self.page.update()
 
         def guardar_cambios(inputs, filtro):
+            from utils import validar_telefono, validar_email, validar_edad
+            from views import AlertView
+            from services import  get_dni
             '''Método para guardar los cambios realizados'''
             try:
                 # Obtener los valores del formulario
                 nuevos_datos = {key: field.value for key, field in inputs.items()}
+                print (self.collection_name)
+                print(filtro)
+                print(nuevos_datos)
+
+                if self.collection_name == 'pacientes':
+                    if not validar_edad(nuevos_datos['edad']):
+                        alerta = AlertView(
+                            titulo="Error",
+                            mensaje=f"La edad debe ser un número entero.",
+                            page=self.page,
+                        )
+                        alerta.open_dialog()
+                        return
+
+                if self.collection_name == 'pacientes' or self.collection_name == 'medicos':
+                    # validaciones
+                    if not validar_telefono(nuevos_datos["telefono"]):
+                        alerta = AlertView(
+                            titulo="Error",
+                            mensaje=f"El telefono debe contener 9 digitos.",
+                            page=self.page,
+                        )
+                        alerta.open_dialog()
+                        return
+                    if not validar_email(nuevos_datos["email"]):
+                        alerta = AlertView(
+                            titulo="Error",
+                            mensaje=f"El correo electronico debe tener un formato válido.",
+                            page=self.page,
+                        )
+                        alerta.open_dialog()
+                        return
+                    
+                if self.collection_name == 'citas':
+                    if not get_dni('pacientes', nuevos_datos['id_paciente']):
+                        alerta = AlertView(
+                            titulo="Error",
+                            mensaje=f"No se encuentra un paciente con DNI {nuevos_datos['id_paciente']}.",
+                            page=self.page,
+                        )
+                        alerta.open_dialog()
+                        return
+                    
+                    if not get_dni('medicos', nuevos_datos['id_medico']):
+                        alerta = AlertView(
+                            titulo="Error",
+                            mensaje=f"No se encuentra un médico con DNI {nuevos_datos['id_medico']}.",
+                            page=self.page,
+                        )
+                        alerta.open_dialog()
+                        return
+                            
+
                 
                 # Llamar a update_data para realizar la actualización
                 update_data(self.collection_name, filtro, nuevos_datos)

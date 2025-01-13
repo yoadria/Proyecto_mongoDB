@@ -8,7 +8,7 @@ class DeleteView:
 
     def build(self):
         self.page.title = "Eliminar"
-        self.page.vertical_alignment = ft.MainAxisAlignment.START
+        self.page.vertical_alignment = ft.MainAxisAlignment.CENTER
         self.page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
         self.page.update()
 
@@ -186,6 +186,13 @@ class DeleteView:
                 height=50,
                 on_click=lambda e: seleccionar_tipo("Citas"),
             ),
+            ft.ElevatedButton(
+                text="Volver",
+                style=button_style,
+                width=300,
+                height=50,
+                on_click=self.ir_a_main,
+            )
         ]
 
         self.page.add(ft.Container(
@@ -196,3 +203,10 @@ class DeleteView:
             ),
             padding=20,
         ))
+
+    def ir_a_main(self, e):
+        from views import MainView
+
+        self.page.clean()
+        main_view = MainView(self.page)
+        main_view.build()

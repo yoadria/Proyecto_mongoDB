@@ -11,7 +11,7 @@ class ModificarViews:
     def build(self):
         '''Método que construye la página Modificar'''
         self.page.title = "Modificar"
-        self.page.vertical_alignment = ft.MainAxisAlignment.START
+        self.page.vertical_alignment = ft.MainAxisAlignment.CENTER
         self.page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
         self.page.update()
 
@@ -132,6 +132,7 @@ class ModificarViews:
                         text="Volver",
                         width=300,
                         height=50,
+                        style=button_style,
                         on_click=volver_a_menu_principal,
                     ),
                 ]

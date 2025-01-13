@@ -18,30 +18,39 @@ class InsercionesView:
         # Botones principales para elegir tipo de inserción
         botones = ft.Column(
             controls=[
-                ft.ElevatedButton(
-                    text="Paciente",
-                    style=button_style,
-                    width=300,
-                    height=50,
-                    on_click=lambda e: self.mostrar_campos(Paciente),
+                ft.Container(
+                    content=ft.ElevatedButton(
+                        text="Paciente",
+                        style=button_style,
+                        width=300,
+                        height=50,
+                        on_click=lambda e: self.mostrar_campos(Paciente),
+                    ),
+                    padding=ft.Padding(0, 5, 0, 0)  # Margen superior de 5
                 ),
-                ft.ElevatedButton(
-                    text="Médico",
-                    style=button_style,
-                    width=300,
-                    height=50,
-                    on_click=lambda e: self.mostrar_campos(Medico),
+                ft.Container(
+                    content=ft.ElevatedButton(
+                        text="Médico",
+                        style=button_style,
+                        width=300,
+                        height=50,
+                        on_click=lambda e: self.mostrar_campos(Medico),
+                    ),
+                    
                 ),
-                ft.ElevatedButton(
-                    text="Cita",
-                    style=button_style,
-                    width=300,
-                    height=50,
-                    on_click=lambda e: self.mostrar_campos(Cita),
+                ft.Container(
+                    content=ft.ElevatedButton(
+                        text="Cita",
+                        style=button_style,
+                        width=300,
+                        height=50,
+                        on_click=lambda e: self.mostrar_campos(Cita),
+                    ),
+                    
                 ),
             ],
             alignment=ft.MainAxisAlignment.CENTER,
-            spacing=15,
+            spacing=10
         )
 
         # Agregar botones y contenedor dinámico a la página
@@ -50,9 +59,9 @@ class InsercionesView:
                 content=ft.Column(
                     controls=[botones, self.fields],
                     alignment=ft.MainAxisAlignment.CENTER,
-                    spacing=20,
+                    spacing=10,
                 ),
-                padding=20,
+                padding=10,
             )
         )
 
@@ -75,7 +84,7 @@ class InsercionesView:
                 ),
             ],
             alignment=ft.MainAxisAlignment.CENTER,
-            spacing=15,
+            spacing=10,
         )
         self.page.add(botones_inferiores)
         self.page.update()

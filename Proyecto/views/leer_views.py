@@ -11,7 +11,7 @@ class LeerViews:
     def build(self):
         '''Método que construye la página Leer'''
         self.page.title = "Leer"
-        self.page.vertical_alignment = ft.MainAxisAlignment.START
+        self.page.vertical_alignment = ft.MainAxisAlignment.CENTER
         self.page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
 
         # Detectar el tamaño de la pantalla
@@ -103,9 +103,9 @@ class LeerViews:
                             ft.ElevatedButton(
                                 text="Volver",
                                 style=button_style,
-                                width=300,
+                                width=1000,
                                 height=50,
-                                on_click=volver_a_menu_principal  # Conectar botón "Volver"
+                                on_click=volver_a_menu_principal, # Conectar botón "Volver"
                             )
                         ]
                     elif ajustes["vista"] == "tarjetas":

@@ -28,7 +28,7 @@ class ModificarViews:
 
             buscar_fields.controls = [
                 ft.TextField(
-                    label="DNI" if tipo in ["Pacientes", "Medicos"] else "Nro de Cita",
+                    label="DNI" if tipo in ["pacientes", "medicos"] else "Numero de Cita",
                     width=300,
                     on_submit=lambda e: buscar_registro(e.control.value),
                     color=ft.Colors.BLACK,
@@ -62,7 +62,7 @@ class ModificarViews:
 
                 datos = read_data(self.collection_name)
                 filtro = None
-                if self.collection_name in ["Pacientes", "Medicos"]:
+                if self.collection_name in ["pacientes", "medicos"]:
                     filtro = next((fila for fila in datos if str(fila.get("DNI", "")) == identificador), None)
                 elif self.collection_name == "citas":
                     filtro = next((fila for fila in datos if str(fila.get("nro_cita", "")) == identificador), None)
@@ -86,7 +86,7 @@ class ModificarViews:
             buscar_fields.visible = False
             formulario_fields.visible = True
 
-            inputs = {};id_oculto = {} #Inicializamos listas que se usaran para el guardado
+            inputs = {}; id_oculto = {} #Inicializamos listas que se usaran para el guardado
 
             for col in columnas: #Se crea el formulario obteniendo los datos dinamicamente de la BD. No se muestra ni el nro_cita ni el DNI
                 if col not in ["_id", "DNI", "nro_cita"]:

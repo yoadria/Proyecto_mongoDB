@@ -12,7 +12,6 @@ LABELS_MAP = {
     "nombre": "Nombre",
     "dni": "DNI",
     "especialidad": "Especialidad",
-    "telefono": "Teléfono",
     "email": "Correo Electrónico",
 
     # Para la clase Cita

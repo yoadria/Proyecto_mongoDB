@@ -61,8 +61,6 @@ class LeerViews:
                         for col in datos[0].keys() if col != "_id"
                     ]
 
-
-
                     # Obtener las filas sin incluir '_id'
                     filas = []
                     for row in datos:
@@ -75,12 +73,7 @@ class LeerViews:
                     
                     # Mostrar los datos en formato de tabla o tarjetas
                     if ajustes["vista"] == "tabla":
-                        # Crear tabla con los datos filtrados utilizando los estilos proporcionados
-                        # tabla = estilo_tabla(
-                        #     columns=[estilo_encabezado(col) for col in columnas],
-                        #     rows=[ft.DataRow(cells=[estilo_celda(str(fila[col if col != "numero citas" else "nro_cita"]), ajustes["fuente_celda"]) for col in columnas]) for fila in filas]
-                        # )
-
+                        
                         tabla = estilo_tabla(
                             columns=[estilo_encabezado(col) for col in columnas],
                             rows=[ft.DataRow(cells=[

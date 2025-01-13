@@ -109,21 +109,28 @@ class InsercionesView:
 
         from services import insert_data, get_dni
         from views import AlertView
-        from utils import validar_telefono, validar_email, validar_dni, validar_edad
+        from utils import validar_telefono, validar_email, validar_dni, validar_edad, LABELS_MAP
 
         # Extraer datos del contenedor de forma dinámica
         # Usamos las claves y valores de los controles tipo TextField
+
+        INVERSE_LABELS_MAP = {v: k for k, v in LABELS_MAP.items()}
         datos = {}
+        
         for control in self.fields.controls:
             if isinstance(control, ft.TextField):
-                key = control.label.lower()
+                # Obtener la clave original usando la etiqueta visible
+                key = INVERSE_LABELS_MAP.get(control.label, control.label.lower())
+                
+                # Obtener el valor ingresado por el usuario
                 value = control.value
+                
+                # Almacenar en el diccionario
                 datos[key] = value
 
         if 'dni' in datos:
             datos['DNI'] = datos.pop('dni')
         
-
         # Validar campos vacíos
         if any(not value for value in datos.values()):
             alerta = AlertView(
@@ -146,7 +153,7 @@ class InsercionesView:
         
         if self.collection == "pacientes" or self.collection == "medicos":
 
-            if not  validar_telefono(datos["teléfono"]):
+            if not validar_telefono(datos["telefono"]):
                 alerta = AlertView(
                     titulo="Error",
                     mensaje=f"El telefono debe contener 9 digitos.",
@@ -155,7 +162,7 @@ class InsercionesView:
                 alerta.open_dialog()
                 return
             
-            if not validar_email(datos["correo electrónico"]):
+            if not validar_email(datos["email"]):
                 alerta = AlertView(
                     titulo="Error",
                     mensaje=f"El correo electronico debe tener un formato válido.",
@@ -172,32 +179,30 @@ class InsercionesView:
                 alerta.open_dialog()
                 return  
             
-            datos['email'] = datos.pop('correo electrónico')
+            datos['email'] = datos.pop('email')
         else:
-            if not get_dni('pacientes', datos['dni paciente']):
+            if not get_dni('pacientes', datos['id_paciente']):
                 alerta = AlertView(
                     titulo="Error",
-                    mensaje=f"No se encuentra un paciente con DNI {datos['dni paciente']}.",
+                    mensaje=f"No se encuentra un paciente con DNI {datos['id_paciente']}.",
                     page=self.page,
                 )
                 alerta.open_dialog()
                 return
             
-            if not get_dni('medicos', datos['dni médico']):
+            if not get_dni('medicos', datos['id_medico']):
                 alerta = AlertView(
                     titulo="Error",
-                    mensaje=f"No se encuentra un médico con DNI {datos['dni médico']}.",
+                    mensaje=f"No se encuentra un médico con DNI {datos['id_medico']}.",
                     page=self.page,
                 )
                 alerta.open_dialog()
                 return
             
-            datos['id_paciente'] = datos.pop('dni paciente')
-            datos['id_medico'] = datos.pop('dni médico')
-            datos['nro_cita'] = datos.pop('número de cita')
+            datos['id_paciente'] = datos.pop('id_paciente')
+            datos['id_medico'] = datos.pop('id_medico')
+            datos['nro_cita'] = datos.pop('nro_cita')
 
-
-            
 
         # Intentar insertar en la base de datos
         try:
@@ -219,8 +224,7 @@ class InsercionesView:
                 page=self.page,
             )
             alerta.open_dialog()
-        
-        print(datos)
+    
             
     def ir_a_main(self, e):
         from views import MainView

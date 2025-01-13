@@ -89,7 +89,6 @@ class InsercionesView:
         # Crea campos utilizando los valores del modelo
         atributos = modelo.__init__.__code__.co_varnames[1:]  # Obtiene los nombres de los parámetros del constructor
 
-
         campos = [
             ft.TextField(
                 label=LABELS_MAP.get(atributo, atributo.capitalize()),  # Usa el mapeo de etiquetas o capitaliza por defecto
@@ -146,7 +145,8 @@ class InsercionesView:
                 return
         
         if self.collection == "pacientes" or self.collection == "medicos":
-            if not  validar_telefono(datos["telefono"]):
+
+            if not  validar_telefono(datos["teléfono"]):
                 alerta = AlertView(
                     titulo="Error",
                     mensaje=f"El telefono debe contener 9 digitos.",
@@ -154,7 +154,8 @@ class InsercionesView:
                 )
                 alerta.open_dialog()
                 return
-            if not validar_email(datos["correo electronico"]):
+            
+            if not validar_email(datos["correo electrónico"]):
                 alerta = AlertView(
                     titulo="Error",
                     mensaje=f"El correo electronico debe tener un formato válido.",
@@ -171,7 +172,7 @@ class InsercionesView:
                 alerta.open_dialog()
                 return  
             
-            datos['email'] = datos.pop('correo electronico')
+            datos['email'] = datos.pop('correo electrónico')
         else:
             if not get_dni('pacientes', datos['dni paciente']):
                 alerta = AlertView(
@@ -182,18 +183,18 @@ class InsercionesView:
                 alerta.open_dialog()
                 return
             
-            if not get_dni('medicos', datos['dni medico']):
+            if not get_dni('medicos', datos['dni médico']):
                 alerta = AlertView(
                     titulo="Error",
-                    mensaje=f"No se encuentra un médico con DNI {datos['dni medico']}.",
+                    mensaje=f"No se encuentra un médico con DNI {datos['dni médico']}.",
                     page=self.page,
                 )
                 alerta.open_dialog()
                 return
             
             datos['id_paciente'] = datos.pop('dni paciente')
-            datos['id_medico'] = datos.pop('dni medico')
-            datos['nro_cita'] = datos.pop('numero de cita')
+            datos['id_medico'] = datos.pop('dni médico')
+            datos['nro_cita'] = datos.pop('número de cita')
 
 
             

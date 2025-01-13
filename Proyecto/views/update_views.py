@@ -64,7 +64,7 @@ class ModificarViews:
                 filtro = None
                 if self.collection_name in ["Pacientes", "Medicos"]:
                     filtro = next((fila for fila in datos if str(fila.get("DNI", "")) == identificador), None)
-                elif self.collection_name == "Citas":
+                elif self.collection_name == "citas":
                     filtro = next((fila for fila in datos if str(fila.get("nro_cita", "")) == identificador), None)
 
                 if filtro:
@@ -104,12 +104,14 @@ class ModificarViews:
                     width=300,
                     height=50,
                     on_click=lambda e: guardar_cambios(inputs, id_oculto),
+                    style=button_style
                 ),
                 ft.ElevatedButton(
                     text="Cancelar",
                     width=300,
                     height=50,
                     on_click=volver_a_menu_principal,
+                    style=button_style
                 ),
             ]
             self.page.update()
@@ -169,21 +171,21 @@ class ModificarViews:
                 style=button_style,
                 width=300,
                 height=50,
-                on_click=lambda e: seleccionar_tipo("Pacientes"),
+                on_click=lambda e: seleccionar_tipo("pacientes"),
             ),
             ft.ElevatedButton(
                 text="Médico",
                 style=button_style,
                 width=300,
                 height=50,
-                on_click=lambda e: seleccionar_tipo("Medicos"),
+                on_click=lambda e: seleccionar_tipo("medicos"),
             ),
             ft.ElevatedButton(
                 text="Cita",
                 style=button_style,
                 width=300,
                 height=50,
-                on_click=lambda e: seleccionar_tipo("Citas"),
+                on_click=lambda e: seleccionar_tipo("citas"),
             ),
             ft.ElevatedButton(
                 text="Volver",

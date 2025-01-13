@@ -3,7 +3,7 @@ LABELS_MAP = {
     "nombre": "Nombre",
     "dni": "DNI",
     "edad": "Edad",
-    "genero": "Género",
+    # "genero": "Género",
     "direccion": "Dirección",
     "telefono": "Teléfono",
     "email": "Correo Electrónico",
@@ -18,7 +18,7 @@ LABELS_MAP = {
     # Para la clase Cita
     "id_paciente": "DNI Paciente",
     "nro_cita": "Número de Cita",
-    "id_medico": "DNI Medico",
+    "id_medico": "DNI Médico",
     "fecha": "Fecha",
     "motivo": "Motivo"
 }

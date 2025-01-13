@@ -5,11 +5,11 @@ from bson.objectid import ObjectId
 # Modelos
 class Paciente:
     
-    def __init__(self, nombre: str, dni: str, edad: int, genero: str, direccion: str, telefono: str, email: str):
+    def __init__(self, nombre: str, dni: str, edad: int, direccion: str, telefono: str, email: str):
         self.nombre = nombre
         self.dni = dni
         self.edad = edad
-        self.genero = genero
+        # self.genero = genero
         self.direccion = direccion
         self.telefono = telefono
         self.email = email

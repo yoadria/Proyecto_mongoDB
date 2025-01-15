@@ -1,5 +1,5 @@
 import flet as ft
-from services.crud_operations import read_data, update_data
+from services.crud_operations import read_data, update_data, get_dni
 from utils.style import button_style  # Importar los estilos
 
 class ModificarViews:
@@ -81,17 +81,23 @@ class ModificarViews:
                 )
                 self.page.update()
 
+        from utils import LABELS_MAP  # Importar el mapeo de etiquetas
+
         def mostrar_formulario(filas, columnas):
             '''Método para mostrar el formulario de modificación'''
             buscar_fields.visible = False
             formulario_fields.visible = True
 
-            inputs = {}; id_oculto = {} #Inicializamos listas que se usaran para el guardado
+            inputs = {}
+            id_oculto = {}
 
-            for col in columnas: #Se crea el formulario obteniendo los datos dinamicamente de la BD. No se muestra ni el nro_cita ni el DNI
+            for col in columnas:
+                # Mapear la etiqueta desde LABELS_MAP o usar el nombre de la columna por defecto
+                etiqueta = LABELS_MAP.get(col, col.capitalize())
+
                 if col not in ["_id", "DNI", "nro_cita"]:
                     value = str(filas[0].get(col, ""))
-                    inputs[col] = ft.TextField(label=col, value=value, width=300)
+                    inputs[etiqueta] = ft.TextField(label=etiqueta, value=value, width=300)
                 elif col == "DNI":
                     id_oculto["DNI"] = filas[0].get("DNI", "")
                 elif col == "nro_cita":
@@ -119,14 +125,17 @@ class ModificarViews:
         def guardar_cambios(inputs, filtro):
             from utils import validar_telefono, validar_email, validar_edad
             from views import AlertView
-            from services import  get_dni
+            
             '''Método para guardar los cambios realizados'''
             try:
-                # Obtener los valores del formulario
-                nuevos_datos = {key: field.value for key, field in inputs.items()}
-                print (self.collection_name)
-                print(filtro)
-                print(nuevos_datos)
+                # Crear un mapeo inverso para transformar etiquetas de vuelta a claves originales
+                INVERSE_LABELS_MAP = {v: k for k, v in LABELS_MAP.items()}
+
+                # Transformar las etiquetas amigables a nombres originales
+                nuevos_datos = {
+                    INVERSE_LABELS_MAP.get(field.label, field.label.lower()): field.value
+                    for field in inputs.values()
+                }
 
                 if self.collection_name == 'pacientes':
                     if not validar_edad(nuevos_datos['edad']):
@@ -156,7 +165,7 @@ class ModificarViews:
                         )
                         alerta.open_dialog()
                         return
-                    
+
                 if self.collection_name == 'citas':
                     if not get_dni('pacientes', nuevos_datos['id_paciente']):
                         alerta = AlertView(
@@ -166,7 +175,7 @@ class ModificarViews:
                         )
                         alerta.open_dialog()
                         return
-                    
+
                     if not get_dni('medicos', nuevos_datos['id_medico']):
                         alerta = AlertView(
                             titulo="Error",
@@ -175,9 +184,7 @@ class ModificarViews:
                         )
                         alerta.open_dialog()
                         return
-                            
 
-                
                 # Llamar a update_data para realizar la actualización
                 update_data(self.collection_name, filtro, nuevos_datos)
 
